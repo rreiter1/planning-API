@@ -11,6 +11,9 @@ namespace APIplanning
     public class SeanceDAO
     {
         private MySqlConnection conn;
+
+
+        //connecteur
         public SeanceDAO()
         {
             string myConnectionString;
@@ -19,6 +22,8 @@ namespace APIplanning
             conn.ConnectionString = myConnectionString;
             conn.Open();
         }
+
+        // revenvoie la liste de toute les seance
         public List<Seance> getAllSeances()
         {
             List<Seance> lesSeances = new List<Seance>();
@@ -34,6 +39,8 @@ namespace APIplanning
             rdr.Close();
             return lesSeances;
         }
+
+        //renvoie la seance selon son Id
         public Seance getSeance(int id)
         {
             string requete = "select * from seance where id = " + id;
@@ -51,13 +58,17 @@ namespace APIplanning
             return laSeance;            
         }
 
+        //inutile
+        /*
         public void updateSeance(int id, string descriptif)
         {
             string requete = "Update seance SET descriptif = '" + descriptif + "' WHERE id = " + id;
             MySqlCommand cmd = new MySqlCommand(requete, conn);
             cmd.ExecuteNonQuery();
-        }
+        }*/
 
+
+        //Cree la seance
         public bool addSeance(Seance s)
         {
             string requete = "INSERT INTO `seance` (`id`, `jour`, `descriptif`, `debut`, `fin`, `la_categorie`) VALUES('" + s.Id + "', '" + s.Jour + "', '" + s.Descriptif + "', '" + s.Debut.ToString("yyyy-M-d h:m:s") + "', '" + s.Fin.ToString("yyyy-M-d h:m:s") + "', '" + s.Categorie + "');";
@@ -66,6 +77,7 @@ namespace APIplanning
             return true;
         }
 
+        //supprimer une Seance selon son id
         public bool deleteSeance(int id)
         {
             string requete = "DELETE FROM `seance` WHERE id = " + id;
@@ -74,6 +86,8 @@ namespace APIplanning
             return true;
         }
 
+
+        //ajouter une proposition selon l'id de la seance et du moniteur
         public bool insertProposer(int id,int moniteur)
         {
             string requete = "INSERT INTO proposer (id_seance,id_moniteur) VALUES (" + id + "," + moniteur + ")";
@@ -81,7 +95,9 @@ namespace APIplanning
             MySqlDataReader rdr = cmd.ExecuteReader();
             return true;
         }
-    
+
+
+        //supprimer une position selon l'id de la seance et du moniteur
         public bool deleteProposer(int idSeance , int idMoniteur)
         {
             string requete = "DELETE FROM proposer WHERE id_seance = " + idSeance + " and id_moniteur = " + idMoniteur + " ;";
@@ -89,6 +105,8 @@ namespace APIplanning
             MySqlDataReader rdr = cmd.ExecuteReader();
             return true;
         }
+
+        //retourne la liste des proposition des moniteur selon l'id de la seance
         public List<proposer> getProposerSeance(int id_seance)
         {
             List<proposer> ps = new List<proposer>();
@@ -104,6 +122,7 @@ namespace APIplanning
             return ps;
         }
 
+        //Verifie la connexion
         public string connection(string email, string mdp)
         {
             string requete = "SELECT connexion('"+email+"','"+mdp+"')";
